@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alynx Survival RPG | Servidor Minecraft</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+
+    <!-- Custom Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0f172a',
+                            light: '#1e293b',
+                            accent: '#6366f1', // Indigo
+                            glow: '#818cf8',
+                            success: '#10b981', // Emerald for survival
+                            danger: '#f43f5e', // Rose for PVP
+                            gold: '#fbbf24', // Amber for economy
+                        }
+                    },
+                    backgroundImage: {
+                        'hero-pattern': "linear-gradient(to bottom, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 1)), url('https://images.unsplash.com/photo-1607243631823-1b6ba75b48a3?q=80&w=1920&auto=format&fit=crop')",
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6366f1;
+        }
+
+        /* Scroll Reveal Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Minecraft Text Effect for Logo */
+        .mc-shadow {
+            text-shadow: 2px 2px 0px #000;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="bg-brand-dark text-gray-300 font-sans antialiased overflow-x-hidden selection:bg-brand-accent selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 transition-all duration-300 bg-brand-dark/80 backdrop-blur-md border-b border-white/5" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div class="w-10 h-10 bg-brand-accent rounded-lg flex items-center justify-center shadow-lg shadow-brand-accent/20">
+                        <i class="ri-sword-fill text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-display font-bold text-2xl text-white tracking-tight leading-none">ALYNX</h1>
+                        <span class="text-xs font-bold text-brand-accent tracking-widest uppercase">Survival RPG</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#sobre" class="hover:text-white transition-colors px-3 py-2 rounded-md text-sm font-medium">Sobre</a>
+                        <a href="#modos" class="hover:text-white transition-colors px-3 py-2 rounded-md text-sm font-medium">Modos</a>
+                        <a href="#sistemas" class="hover:text-white transition-colors px-3 py-2 rounded-md text-sm font-medium">Sistemas</a>
+                        <a href="#roadmap" class="hover:text-white transition-colors px-3 py-2 rounded-md text-sm font-medium">Roadmap</a>
+                        <a href="#faq" class="hover:text-white transition-colors px-3 py-2 rounded-md text-sm font-medium">FAQ</a>
+                    </div>
+                </div>
+
+                <!-- CTA Button -->
+                <div class="hidden md:block">
+                    <button onclick="copyIp()" class="group relative inline-flex items-center gap-2 px-6 py-2 bg-white/5 hover:bg-brand-accent border border-white/10 hover:border-brand-accent rounded-full transition-all duration-300 font-semibold text-white overflow-hidden">
+                        <span class="relative z-10 flex items-center gap-2">
+                            <i class="ri-file-copy-line"></i>
+                            <span id="ip-text-nav">alynxmc.jogar.io</span>
+                        </span>
+                        <div class="absolute inset-0 bg-brand-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md"></div>
+                    </button>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" onclick="toggleMobileMenu()" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-white/10 focus:outline-none">
+                        <i class="ri-menu-4-line text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div class="md:hidden hidden bg-brand-dark border-b border-white/10" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#sobre" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" onclick="toggleMobileMenu()">Sobre</a>
+                <a href="#modos" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" onclick="toggleMobileMenu()">Modos</a>
+                <a href="#sistemas" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" onclick="toggleMobileMenu()">Sistemas</a>
+                <button onclick="copyIp()" class="w-full mt-4 text-center bg-brand-accent text-white px-4 py-3 rounded-lg font-bold">
+                    Copiar IP
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex items-center justify-center bg-hero-pattern bg-cover bg-center bg-fixed pt-20">
+        
+        <!-- Animated Particles/Overlay -->
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-30"></div>
+
+        <div class="container mx-auto px-4 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+            
+            <!-- Left Content -->
+            <div class="text-center lg:text-left reveal active">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-accent/10 border border-brand-accent/20 text-brand-accent text-sm font-bold mb-6 animate-pulse-slow">
+                    <span class="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_10px_rgba(74,222,128,0.5)]"></span>
+                    Servidor Online • 1.20+
+                </div>
+                
+                <h1 class="text-5xl md:text-7xl font-display font-bold text-white mb-6 leading-tight">
+                    Sua Aventura <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent to-purple-400">Começa Aqui</span>
+                </h1>
+                
+                <p class="text-lg md:text-xl text-gray-400 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                    Alynx é um servidor <strong>Survival RPG</strong> profissional. Guildas, guerras territoriais, dungeons instanciadas e uma economia viva feita pelos jogadores.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <button onclick="copyIp()" class="group px-8 py-4 bg-brand-accent hover:bg-brand-accent/90 text-white rounded-xl font-bold text-lg transition-all transform hover:-translate-y-1 shadow-lg shadow-brand-accent/25 flex items-center justify-center gap-3">
+                        <i class="ri-gamepad-line text-2xl"></i>
+                        <span class="flex flex-col items-start leading-none">
+                            <span class="text-xs font-medium opacity-80 uppercase tracking-wide">Jogue Agora</span>
+                            <span id="hero-ip-text">play.alynxmc.com</span>
+                        </span>
+                    </button>
+                    
+                    <a href="https://discord.gg/AWQ6eu3eb9" target="_blank" class="px-8 py-4 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-2">
+                        <i class="ri-discord-fill"></i>
+                        Discord
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right Content (Visual) -->
+            <div class="relative hidden lg:block animate-float">
+                <!-- Card Stack Effect -->
+                <div class="relative w-full max-w-md mx-auto aspect-[4/5]">
+                    <!-- Back Card -->
+                    <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl transform rotate-6 opacity-40 blur-sm"></div>
+                    <!-- Middle Card -->
+                    <div class="absolute inset-0 bg-brand-light rounded-2xl transform -rotate-3 border border-white/10 shadow-2xl flex flex-col overflow-hidden">
+                        <div class="h-1/2 bg-gray-800 flex items-center justify-center relative overflow-hidden">
+                             <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1624138784181-dc7f5b759b29?q=80&w=800&auto=format&fit=crop')] bg-cover bg-center opacity-50"></div>
+                             <div class="relative z-10 text-center">
+                                <i class="ri-sword-line text-5xl text-brand-accent drop-shadow-lg"></i>
+                             </div>
+                        </div>
+                        <div class="h-1/2 p-6 relative">
+                            <div class="flex justify-between items-center mb-4">
+                                <div class="font-display font-bold text-white text-xl">Guerra de Guildas</div>
+                                <span class="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded font-bold">PVP</span>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="h-2 bg-white/5 rounded w-3/4"></div>
+                                <div class="h-2 bg-white/5 rounded w-full"></div>
+                                <div class="h-2 bg-white/5 rounded w-5/6"></div>
+                            </div>
+                            <button class="mt-6 w-full py-2 bg-white/5 hover:bg-brand-accent text-sm font-bold rounded transition-colors text-white">Ver Ranking</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Front Floating Elements -->
+                    <div class="absolute -right-10 top-20 bg-brand-dark p-4 rounded-xl border border-white/10 shadow-xl flex items-center gap-3 animate-pulse-slow">
+                        <div class="w-10 h-10 bg-yellow-500/20 rounded-full flex items-center justify-center text-yellow-500">
+                            <i class="ri-coins-line text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs text-gray-400">Economia</div>
+                            <div class="font-bold text-white">$$$ Ativo</div>
+                        </div>
+                    </div>
+
+                    <div class="absolute -left-5 bottom-20 bg-brand-dark p-4 rounded-xl border border-white/10 shadow-xl flex items-center gap-3">
+                        <div class="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center text-green-500">
+                            <i class="ri-leaf-line text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs text-gray-400">Survival</div>
+                            <div class="font-bold text-white">Vanilla+</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-gray-500">
+            <i class="ri-arrow-down-line text-2xl"></i>
+        </div>
+    </header>
+
+    <!-- Stats Section (Social Proof) -->
+    <section class="border-y border-white/5 bg-brand-light/30 py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="reveal">
+                    <div class="text-3xl font-display font-bold text-white mb-1">24/7</div>
+                    <div class="text-sm text-gray-500 uppercase tracking-wider">Uptime</div>
+                </div>
+                <div class="reveal">
+                    <div class="text-3xl font-display font-bold text-brand-accent mb-1">RPG</div>
+                    <div class="text-sm text-gray-500 uppercase tracking-wider">Sistemas</div>
+                </div>
+                <div class="reveal">
+                    <div class="text-3xl font-display font-bold text-white mb-1">1.20+</div>
+                    <div class="text-sm text-gray-500 uppercase tracking-wider">Versão</div>
+                </div>
+                <div class="reveal">
+                    <div class="text-3xl font-display font-bold text-green-400 mb-1">0%</div>
+                    <div class="text-sm text-gray-500 uppercase tracking-wider">Lag</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sobre / Features Grid -->
+    <section id="sobre" class="py-20 bg-brand-dark relative overflow-hidden">
+        <!-- Background blobs -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-brand-accent/10 rounded-full blur-[100px]"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px]"></div>
+
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <h2 class="text-brand-accent font-bold tracking-widest uppercase mb-2 text-sm">Sobre o Alynx</h2>
+                <h3 class="text-3xl md:text-4xl font-display font-bold text-white mb-6">Um RPG Vivo dentro do Minecraft</h3>
+                <p class="text-gray-400">
+                    O Alynx nasceu para juntar a essência do survival vanilla com um universo de RPG: guildas, guerras territoriais, dungeons com loot único e uma economia guiada pelos jogadores.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="group p-8 rounded-2xl bg-brand-light border border-white/5 hover:border-brand-accent/50 transition-all duration-300 hover:-translate-y-2 reveal">
+                    <div class="w-14 h-14 bg-brand-dark rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform border border-white/10 group-hover:border-brand-accent/50">
+                        <i class="ri-shield-cross-line text-3xl text-brand-accent"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3">Survival & Claims</h4>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Proteja sua base com um sistema de claim intuitivo. Construa impérios sem medo de grief, mantendo a liberdade do vanilla.
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="group p-8 rounded-2xl bg-brand-light border border-white/5 hover:border-purple-500/50 transition-all duration-300 hover:-translate-y-2 reveal delay-100">
+                    <div class="w-14 h-14 bg-brand-dark rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform border border-white/10 group-hover:border-purple-500/50">
+                        <i class="ri-skull-2-line text-3xl text-purple-400"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3">Dungeons & Bosses</h4>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Masmorras instanciadas com loot épico. Junte seus amigos, derrote chefes desafiadores e consiga itens customizados.
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="group p-8 rounded-2xl bg-brand-light border border-white/5 hover:border-yellow-500/50 transition-all duration-300 hover:-translate-y-2 reveal delay-200">
+                    <div class="w-14 h-14 bg-brand-dark rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform border border-white/10 group-hover:border-yellow-500/50">
+                        <i class="ri-exchange-dollar-line text-3xl text-yellow-400"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3">Economia Real</h4>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Mercado de jogadores, leilões e sistema bancário. A economia flutua baseada na oferta e demanda da comunidade.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modos de Jogo (Tabs visual styling) -->
+    <section id="modos" class="py-20 bg-brand-light border-y border-white/5">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12 reveal">
+                <h2 class="text-3xl md:text-4xl font-display font-bold text-white">Modos de Jogo</h2>
+                <div class="w-20 h-1 bg-brand-accent mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6 reveal">
+                    <!-- List Item 1 -->
+                    <div class="flex gap-6 p-4 rounded-xl hover:bg-white/5 transition-colors cursor-default group">
+                        <div class="flex-shrink-0 mt-1">
+                            <i class="ri-sword-fill text-2xl text-red-400 bg-red-400/10 p-3 rounded-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold text-white mb-2 group-hover:text-red-400 transition-colors">Guildas & Guerras</h4>
+                            <p class="text-gray-400 text-sm">Crie sua facção, recrute membros e dispute territórios no mapa global. Diplomacia e estratégia são essenciais.</p>
+                        </div>
+                    </div>
+
+                    <!-- List Item 2 -->
+                    <div class="flex gap-6 p-4 rounded-xl hover:bg-white/5 transition-colors cursor-default group">
+                        <div class="flex-shrink-0 mt-1">
+                            <i class="ri-hammer-fill text-2xl text-brand-accent bg-brand-accent/10 p-3 rounded-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold text-white mb-2 group-hover:text-brand-accent transition-colors">Mundo de Coleta Resetável</h4>
+                            <p class="text-gray-400 text-sm">Um mundo separado apenas para farmar recursos. Ele reseta periodicamente, garantindo minérios sempre frescos sem estragar as construções do mundo principal.</p>
+                        </div>
+                    </div>
+
+                    <!-- List Item 3 -->
+                    <div class="flex gap-6 p-4 rounded-xl hover:bg-white/5 transition-colors cursor-default group">
+                        <div class="flex-shrink-0 mt-1">
+                            <i class="ri-magic-line text-2xl text-purple-400 bg-purple-400/10 p-3 rounded-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">Itens Customizados</h4>
+                            <p class="text-gray-400 text-sm">Armas lendárias, armaduras com efeitos especiais e talismãs que mudam seu estilo de jogo.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal relative h-[400px] rounded-2xl overflow-hidden shadow-2xl border border-white/10 group">
+                    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1598550476439-6847785fcea6?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center transition-transform duration-700 group-hover:scale-110"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/50 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-8">
+                        <div class="bg-brand-accent text-white text-xs font-bold px-2 py-1 rounded inline-block mb-2">EM DESTAQUE</div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Dungeons Épicas</h3>
+                        <p class="text-gray-300 text-sm">Chame seus amigos e enfrente os desafios mais difíceis do servidor para recompensas exclusivas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sistemas Detalhados -->
+    <section id="sistemas" class="py-20 bg-brand-dark">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="col-span-2 md:col-span-1 bg-brand-light/30 p-6 rounded-xl border border-white/5 text-center reveal hover:bg-brand-light/50 transition-colors">
+                    <div class="text-4xl mb-4">🏰</div>
+                    <h3 class="font-bold text-white mb-2">Claim Solo</h3>
+                    <p class="text-xs text-gray-400">Proteção perfeita para quem joga sozinho.</p>
+                </div>
+                <div class="col-span-2 md:col-span-1 bg-brand-light/30 p-6 rounded-xl border border-white/5 text-center reveal hover:bg-brand-light/50 transition-colors delay-75">
+                    <div class="text-4xl mb-4">⚔️</div>
+                    <h3 class="font-bold text-white mb-2">PVP Arena</h3>
+                    <p class="text-xs text-gray-400">Treine suas habilidades sem perder itens.</p>
+                </div>
+                <div class="col-span-2 md:col-span-1 bg-brand-light/30 p-6 rounded-xl border border-white/5 text-center reveal hover:bg-brand-light/50 transition-colors delay-100">
+                    <div class="text-4xl mb-4">📦</div>
+                    <h3 class="font-bold text-white mb-2">Trade Seguro</h3>
+                    <p class="text-xs text-gray-400">Sistema anti-roubo para trocas.</p>
+                </div>
+                <div class="col-span-2 md:col-span-1 bg-brand-light/30 p-6 rounded-xl border border-white/5 text-center reveal hover:bg-brand-light/50 transition-colors delay-150">
+                    <div class="text-4xl mb-4">📜</div>
+                    <h3 class="font-bold text-white mb-2">Quests</h3>
+                    <p class="text-xs text-gray-400">Missões diárias para ganhar dinheiro.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap Vertical -->
+    <section id="roadmap" class="py-20 bg-brand-light relative overflow-hidden">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-display font-bold text-white">Sua Jornada</h2>
+                <p class="text-gray-400 mt-2">Como evoluir no Alynx</p>
+            </div>
+
+            <div class="relative max-w-2xl mx-auto">
+                <!-- Line -->
+                <div class="absolute left-8 top-0 bottom-0 w-0.5 bg-white/10 md:left-1/2 md:-ml-px"></div>
+
+                <!-- Step 1 -->
+                <div class="relative flex items-center mb-12 md:justify-between reveal group">
+                    <div class="flex items-center order-1 md:w-5/12 md:justify-end md:pr-8">
+                        <div class="md:text-right pl-20 md:pl-0">
+                            <h3 class="text-xl font-bold text-white text-brand-accent">1. Spawn & Lobby</h3>
+                            <p class="text-sm text-gray-400 mt-1">Explore o hub, fale com NPCs e escolha seu caminho.</p>
+                        </div>
+                    </div>
+                    <div class="absolute left-4 md:left-1/2 md:-ml-4 w-8 h-8 bg-brand-dark border-2 border-brand-accent rounded-full flex items-center justify-center z-10 group-hover:scale-125 transition-transform">
+                        <span class="w-2 h-2 bg-white rounded-full"></span>
+                    </div>
+                    <div class="hidden md:block md:w-5/12"></div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="relative flex items-center mb-12 md:justify-between reveal group">
+                    <div class="hidden md:block md:w-5/12"></div>
+                    <div class="absolute left-4 md:left-1/2 md:-ml-4 w-8 h-8 bg-brand-dark border-2 border-green-500 rounded-full flex items-center justify-center z-10 group-hover:scale-125 transition-transform">
+                        <span class="w-2 h-2 bg-white rounded-full"></span>
+                    </div>
+                    <div class="flex items-center order-1 md:w-5/12 md:pl-8">
+                        <div class="pl-20 md:pl-0">
+                            <h3 class="text-xl font-bold text-white text-green-500">2. Coleta & Base</h3>
+                            <p class="text-sm text-gray-400 mt-1">Vá para o mundo de coleta farmar recursos e use o comando de claim para proteger sua terra no mundo survival.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="relative flex items-center mb-12 md:justify-between reveal group">
+                    <div class="flex items-center order-1 md:w-5/12 md:justify-end md:pr-8">
+                        <div class="md:text-right pl-20 md:pl-0">
+                            <h3 class="text-xl font-bold text-white text-purple-500">3. Guild & Dungeons</h3>
+                            <p class="text-sm text-gray-400 mt-1">Junte-se a uma guilda e enfrente dungeons para conseguir equipamentos de tier alto.</p>
+                        </div>
+                    </div>
+                    <div class="absolute left-4 md:left-1/2 md:-ml-4 w-8 h-8 bg-brand-dark border-2 border-purple-500 rounded-full flex items-center justify-center z-10 group-hover:scale-125 transition-transform">
+                        <span class="w-2 h-2 bg-white rounded-full"></span>
+                    </div>
+                    <div class="hidden md:block md:w-5/12"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Accordion -->
+    <section id="faq" class="py-20 bg-brand-dark border-t border-white/5">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <div class="text-center mb-12 reveal">
+                <h2 class="text-3xl font-display font-bold text-white">FAQ</h2>
+                <p class="text-gray-400">Perguntas Frequentes</p>
+            </div>
+
+            <div class="space-y-4 reveal">
+                <!-- Item 1 -->
+                <div class="bg-brand-light rounded-lg overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none" onclick="toggleFaq(this)">
+                        <span class="font-bold text-white">Preciso pagar para entrar?</span>
+                        <i class="ri-arrow-down-s-line text-gray-400 transform transition-transform duration-300"></i>
+                    </button>
+                    <div class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-brand-dark/30">
+                        <div class="px-6 py-4 text-gray-400 text-sm">
+                            Não! O Alynx é 100% gratuito para jogar. Temos uma loja para cosméticos e VIPs que ajudam a manter o servidor, mas não é pay-to-win.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="bg-brand-light rounded-lg overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none" onclick="toggleFaq(this)">
+                        <span class="font-bold text-white">Como funciona o mundo de coleta?</span>
+                        <i class="ri-arrow-down-s-line text-gray-400 transform transition-transform duration-300"></i>
+                    </button>
+                    <div class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-brand-dark/30">
+                        <div class="px-6 py-4 text-gray-400 text-sm">
+                            O mundo de coleta é resetado a cada 30 dias. Isso garante que novos jogadores sempre tenham onde minerar sem destruir a paisagem do mundo principal de construções.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="bg-brand-light rounded-lg overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none" onclick="toggleFaq(this)">
+                        <span class="font-bold text-white">Para que versão é o servidor?</span>
+                        <i class="ri-arrow-down-s-line text-gray-400 transform transition-transform duration-300"></i>
+                    </button>
+                    <div class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-brand-dark/30">
+                        <div class="px-6 py-4 text-gray-400 text-sm">
+                            Suportamos as versões mais recentes do Minecraft Java Edition (1.20+). Recomendamos usar a última versão estável para ver todos os itens customizados.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-dark pt-16 pb-8 border-t border-white/5 relative">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                         <div class="w-8 h-8 bg-brand-accent rounded flex items-center justify-center">
+                            <i class="ri-sword-fill text-white"></i>
+                        </div>
+                        <span class="font-display font-bold text-xl text-white">ALYNX</span>
+                    </div>
+                    <p class="text-gray-500 text-sm leading-relaxed max-w-xs">
+                        O servidor definitivo de Survival RPG. Construído pela comunidade, para a comunidade.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white mb-4">Links Rápidos</h4>
+                    <ul class="space-y-2 text-sm text-gray-500">
+                        <li><a href="#" class="hover:text-brand-accent transition-colors">Regras</a></li>
+                        <li><a href="#" class="hover:text-brand-accent transition-colors">Wiki</a></li>
+                        <li><a href="#" class="hover:text-brand-accent transition-colors">Loja</a></li>
+                        <li><a href="#" class="hover:text-brand-accent transition-colors">Bans</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white mb-4">Comunidade</h4>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-gray-400 hover:bg-[#5865F2] hover:text-white transition-colors">
+                            <i class="ri-discord-fill text-xl"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-gray-400 hover:bg-[#1DA1F2] hover:text-white transition-colors">
+                            <i class="ri-twitter-fill text-xl"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-gray-400 hover:bg-[#FF0000] hover:text-white transition-colors">
+                            <i class="ri-youtube-fill text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/5 pt-8 text-center text-xs text-gray-600">
+                &copy; 2024 Alynx Network. Not affiliated with Mojang AB.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-brand-accent text-white px-6 py-3 rounded-full shadow-2xl opacity-0 pointer-events-none transition-all duration-300 translate-y-10 font-bold flex items-center gap-2 z-50">
+        <i class="ri-check-line"></i>
+        IP Copiado!
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Copy IP Functionality
+        function copyIp() {
+            const ip = "alynxmc.jogar.io";
+            navigator.clipboard.writeText(ip).then(() => {
+                const toast = document.getElementById('toast');
+                
+                // Show Toast
+                toast.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
+                
+                // Reset Text on Buttons (Visual Feedback)
+                const mainBtnText = document.getElementById('hero-ip-text');
+                const navBtnText = document.getElementById('ip-text-nav');
+                
+                if(mainBtnText) mainBtnText.innerText = "Copiado!";
+                if(navBtnText) navBtnText.innerText = "Copiado!";
+
+                setTimeout(() => {
+                    toast.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
+                    if(mainBtnText) mainBtnText.innerText = ip;
+                    if(navBtnText) navBtnText.innerText = ip;
+                }, 2000);
+            });
+        }
+
+        // FAQ Accordion Logic
+        function toggleFaq(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('i');
+            
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                // Close other accordions
+                document.querySelectorAll('#faq .max-h-0').forEach(el => {
+                    el.style.maxHeight = null;
+                    el.previousElementSibling.querySelector('i').style.transform = 'rotate(0deg)';
+                });
+                
+                content.style.maxHeight = content.scrollHeight + "px";
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Scroll Reveal Animation
+        window.addEventListener('scroll', reveal);
+
+        function reveal() {
+            var reveals = document.querySelectorAll('.reveal');
+            var windowHeight = window.innerHeight;
+            var elementVisible = 100;
+
+            for (var i = 0; i < reveals.length; i++) {
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add('active');
+                }
+            }
+        }
+        
+        // Trigger once on load
+        reveal();
+
+        // Navbar Background on Scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-brand-dark/95', 'shadow-lg');
+                nav.classList.remove('bg-brand-dark/80');
+            } else {
+                nav.classList.remove('bg-brand-dark/95', 'shadow-lg');
+                nav.classList.add('bg-brand-dark/80');
+            }
+        });
+    </script>
+</body>
+</html>
