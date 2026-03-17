@@ -2,658 +2,505 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Alynx Minecraft - Survival RPG Crossplay</title>
+  <title>Alynx - O Maior Survival RPG do Minecraft</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Alynx é um servidor Minecraft Survival RPG com classes, reinos, elites e progressão de poder. Compatível com Java e Bedrock (mobile, consoles)." />
+  <meta name="description" content="Alynx é um servidor Minecraft Survival RPG com classes, reinos, elites, dungeons e economia viva. Compatível com Java e Bedrock (mobile, consoles)." />
 
-  <!-- Fonte gamer / futurista -->
-  <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@400;600;800;900&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <script>
-    // Configuração rápida Tailwind (opcional, só pra safra de cores)
     tailwind.config = {
       theme: {
         extend: {
           fontFamily: {
-            display: ['Oxanium', 'system-ui', 'sans-serif'],
-            body: ['Inter', 'system-ui', 'sans-serif'],
+            cartoon: ['"Lilita One"', 'cursive'],
+            body: ['"Nunito"', 'sans-serif'],
           },
+          colors: {
+            'mc-grass': '#5CDB5C',
+            'mc-dirt': '#8B5A2B',
+            'mc-sky': '#4CB5FE',
+            'magic-purple': '#A056FF',
+            'gold-coin': '#FFD700',
+            'dungeon-stone': '#2d3748',
+            'royal-blue': '#1e3a8a',
+          }
         },
       },
     };
   </script>
 
   <style>
-    :root {
-      --alynx-bg: #050816;
-      --alynx-bg-soft: #070c1a;
-      --alynx-purple: #b57cff;
-      --alynx-purple-strong: #8a2be2;
-      --alynx-gold: #ffb84d;
-      --alynx-gold-strong: #ffdd59;
-      --alynx-pink: #ff6fd8;
-      --alynx-cyan: #7fccff;
-    }
-
+    /* Estilos Globais */
     body {
-      background: radial-gradient(circle at top, #0b1022 0, #050816 55%, #02030a 100%);
-      color: #f9fafb;
-      font-family: 'Inter', system-ui, sans-serif;
-    }
-
-    /* Glow atrás da logo */
-    .logo-glow {
-      position: relative;
-    }
-
-    .logo-glow::before {
-      content: '';
-      position: absolute;
-      inset: -20%;
-      background: radial-gradient(circle, rgba(181,124,255,0.45), transparent 60%);
-      filter: blur(18px);
-      z-index: -1;
-      opacity: 0.85;
-    }
-
-    /* Borda neon */
-    .card-neon {
-      position: relative;
-      border-radius: 1.5rem;
-      background:
-        radial-gradient(circle at top left, rgba(255,184,77,0.35), transparent 60%),
-        radial-gradient(circle at bottom right, rgba(181,124,255,0.35), transparent 60%);
-      padding: 1px;
-    }
-
-    .card-neon-inner {
-      border-radius: 1.4rem;
-      background: linear-gradient(145deg, rgba(12,16,35,0.95), rgba(8,11,24,0.98));
-      backdrop-filter: blur(18px);
-    }
-
-    .btn-main {
-      background-image: linear-gradient(135deg, var(--alynx-gold), var(--alynx-gold-strong));
-      color: #1b1026;
-      box-shadow: 0 0 18px rgba(255, 184, 77, 0.5);
-    }
-
-    .btn-main:hover {
-      filter: brightness(1.07);
-      transform: translateY(-1px);
-    }
-
-    .btn-outline {
-      border-radius: 9999px;
-      border: 1px solid rgba(127, 204, 255, 0.45);
-      background: rgba(7, 12, 26, 0.9);
-    }
-
-    .btn-outline:hover {
-      border-color: rgba(181, 124, 255, 0.9);
-      box-shadow: 0 0 16px rgba(127, 204, 255, 0.5);
-    }
-
-    /* Scroll suave */
-    html {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(180deg, var(--tw-colors-mc-sky) 0%, #A2D9FF 50%, #E8F5FF 100%);
+      color: #333;
+      overflow-x: hidden;
       scroll-behavior: smooth;
     }
 
-    /* Nave fixa com blur */
-    .nav-blur {
-      backdrop-filter: blur(18px);
-      background: linear-gradient(to bottom, rgba(5,8,22,0.9), rgba(5,8,22,0.75));
-      border-bottom: 1px solid rgba(148,163,184,0.15);
+    /* Botões 3D */
+    .btn-3d {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Lilita One', cursive;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-radius: 1rem;
+      border: 3px solid #1f2937;
+      transition: all 0.1s ease;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    
+    .btn-play {
+      background-color: #FFD700;
+      color: #b45309;
+      box-shadow: 0 6px 0 #b45309, 0 10px 15px rgba(0,0,0,0.2);
+    }
+    .btn-play:active {
+      transform: translateY(6px);
+      box-shadow: 0 0px 0 #b45309, 0 2px 5px rgba(0,0,0,0.2);
     }
 
-    /* Badge crossplay */
-    .badge-pill {
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.45);
-      background: radial-gradient(circle at top left, rgba(127, 204, 255, 0.18), transparent 60%);
+    .btn-discord {
+      background-color: #A056FF;
+      color: white;
+      box-shadow: 0 6px 0 #5b21b6, 0 10px 15px rgba(0,0,0,0.2);
+    }
+    .btn-discord:active {
+      transform: translateY(6px);
+      box-shadow: 0 0px 0 #5b21b6, 0 2px 5px rgba(0,0,0,0.2);
     }
 
-    /* Pequeno brilho em seções */
-    .section-glow::before {
-      content: '';
+    /* Cartões Cartoon */
+    .card-cartoon {
+      background: white;
+      border: 4px solid #1f2937;
+      border-radius: 1.5rem;
+      box-shadow: 8px 8px 0px rgba(31, 41, 55, 0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+    .card-cartoon:hover {
+      transform: translateY(-5px);
+      box-shadow: 12px 12px 0px rgba(31, 41, 55, 0.2);
+    }
+
+    /* Animações */
+    .floating { animation: float 3s ease-in-out infinite; }
+    .floating-delay { animation: float 4s ease-in-out infinite 1.5s; }
+
+    @keyframes float {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(2deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    .bg-clouds {
       position: absolute;
-      inset: -20%;
-      pointer-events: none;
-      opacity: 0.12;
-      background:
-        radial-gradient(circle at top, rgba(181,124,255,0.8), transparent 60%),
-        radial-gradient(circle at bottom, rgba(255,184,77,0.8), transparent 60%);
-      filter: blur(22px);
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 10%),
+                        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.3) 0%, transparent 8%);
       z-index: -1;
+      animation: drift 60s linear infinite;
+    }
+
+    @keyframes drift {
+      from { background-position: 0 0; }
+      to { background-position: 1000px 0; }
+    }
+
+    /* Badges */
+    .badge-fun {
+      background: #fff;
+      border: 2px solid #1f2937;
+      border-radius: 999px;
+      padding: 0.25rem 0.75rem;
+      font-weight: 800;
+      font-size: 0.75rem;
+      box-shadow: 3px 3px 0px rgba(31, 41, 55, 0.1);
+    }
+
+    /* Divisores de Cenário */
+    .grass-divider {
+      width: 100%;
+      height: 60px;
+      background: #5CDB5C;
+      border-top: 4px solid #1f2937;
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+      position: relative;
+      z-index: 10;
+      margin-top: -30px;
+      box-shadow: inset 0 10px 0 rgba(255,255,255,0.2);
+    }
+    
+    .section-dirt {
+      background-color: #8B5A2B;
+      background-image: radial-gradient(#6B421A 15%, transparent 16%), radial-gradient(#6B421A 15%, transparent 16%);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+      color: #FEF3C7;
+      border-bottom: 4px solid #1f2937;
+    }
+
+    .cave-divider {
+      width: 100%;
+      height: 40px;
+      background: #2d3748;
+      clip-path: polygon(0% 100%, 5% 0%, 10% 100%, 15% 0%, 20% 100%, 25% 0%, 30% 100%, 35% 0%, 40% 100%, 45% 0%, 50% 100%, 55% 0%, 60% 100%, 65% 0%, 70% 100%, 75% 0%, 80% 100%, 85% 0%, 90% 100%, 95% 0%, 100% 100%);
+      margin-top: -1px;
     }
   </style>
 </head>
-<body class="text-slate-100">
+<body class="antialiased relative">
 
-  <!-- NAVBAR -->
-  <header class="fixed top-0 inset-x-0 z-40 nav-blur">
-    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+  <div class="bg-clouds"></div>
+
+  <header class="fixed top-0 inset-x-0 z-50 p-4 pointer-events-none">
+    <div class="mx-auto max-w-7xl bg-white/90 backdrop-blur-md border-4 border-gray-800 rounded-3xl p-2 md:p-3 flex items-center justify-between shadow-[0_8px_0_rgba(31,41,55,0.15)] pointer-events-auto">
       <div class="flex items-center gap-3">
-        <div class="h-9 w-9 rounded-xl overflow-hidden border border-purple-400/40 shadow-lg shadow-purple-500/40 bg-slate-900/80 flex items-center justify-center">
-          <img src="assets/alynx-logo.png" alt="Alynx Logo" class="h-9 w-9 object-contain" />
+        <div class="h-10 w-10 md:h-12 md:w-12 rounded-xl bg-magic-purple border-2 border-gray-800 shadow-inner flex items-center justify-center text-white text-xl md:text-2xl font-cartoon transform -rotate-6">
+          🌟
         </div>
-        <div class="leading-tight">
-          <div class="font-display text-lg tracking-[0.18em] text-[var(--alynx-gold)]">ALYNX</div>
-          <div class="text-[11px] uppercase tracking-[0.18em] text-slate-400">Minecraft RPG</div>
+        <div>
+          <div class="font-cartoon text-xl md:text-2xl text-magic-purple tracking-wide leading-none">ALYNX</div>
+          <div class="text-[9px] md:text-[10px] font-bold text-gray-500 uppercase tracking-widest">Minecraft RPG</div>
         </div>
       </div>
 
-      <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-200">
-        <a href="#sobre" class="hover:text-[var(--alynx-gold)] transition-colors">Sobre</a>
-        <a href="#como-jogar" class="hover:text-[var(--alynx-gold)] transition-colors">Como Jogar</a>
-        <a href="#classes" class="hover:text-[var(--alynx-gold)] transition-colors">Classes</a>
-        <a href="#reinos" class="hover:text-[var(--alynx-gold)] transition-colors">Reinos & Guerras</a>
-        <a href="#comunidade" class="hover:text-[var(--alynx-gold)] transition-colors">Comunidade</a>
+      <nav class="hidden lg:flex items-center gap-5 font-bold text-gray-600 text-sm">
+        <a href="#como-jogar" class="hover:text-magic-purple hover:scale-110 transition-transform">Como Jogar</a>
+        <a href="#classes" class="hover:text-magic-purple hover:scale-110 transition-transform">Classes & Builds</a>
+        <a href="#dungeons" class="hover:text-magic-purple hover:scale-110 transition-transform">Dungeons</a>
+        <a href="#missoes" class="hover:text-magic-purple hover:scale-110 transition-transform">Aventura</a>
+        <a href="#reinos" class="hover:text-magic-purple hover:scale-110 transition-transform">Reinos & Nações</a>
       </nav>
 
-      <div class="hidden md:flex items-center gap-3">
-        <button
-          onclick="copyIP()"
-          class="btn-outline px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--alynx-cyan)] flex items-center gap-2 transition-all">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)]"></span>
-          COPIAR IP
+      <div class="flex gap-2">
+        <button onclick="copyIP()" class="btn-3d bg-white text-gray-800 px-3 py-2 text-xs md:text-sm hover:bg-gray-50">
+          📋 Copiar IP
         </button>
-        <a href="#como-jogar" class="btn-main inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-[0.16em] transition-all">
-          Jogar Agora
-        </a>
       </div>
     </div>
   </header>
 
-  <!-- HERO -->
-  <main class="pt-24 md:pt-28">
-    <section class="relative overflow-hidden">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-14 md:py-20 grid md:grid-cols-2 gap-10 md:gap-16 items-center">
-        <!-- Esquerda: texto -->
-        <div class="space-y-6">
-          <div class="inline-flex items-center gap-3 badge-pill px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-slate-200">
-            <span class="rounded-full bg-emerald-400/90 w-2 h-2 shadow-[0_0_10px_rgba(52,211,153,0.9)]"></span>
-            <span>Servidor Online</span>
-            <span class="w-px h-4 bg-slate-500/40"></span>
-            <span class="text-[var(--alynx-cyan)] font-semibold">Java & Bedrock (Mobile / Console)</span>
-          </div>
-
-          <h1 class="font-display text-[2.35rem] sm:text-[2.9rem] md:text-[3.3rem] leading-tight">
-            Entre no mundo
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-[var(--alynx-gold)] via-[var(--alynx-pink)] to-[var(--alynx-purple)]">
-              RPG do Alynx
-            </span>
-          </h1>
-
-          <p class="text-sm sm:text-base text-slate-300 max-w-xl">
-            Evolua classes, enfrente mobs de elite, forme reinos, lute guerras
-            e construa sua história em um servidor <span class="text-[var(--alynx-gold)] font-semibold">Survival RPG</span>
-            pensado para todas as idades — com progressão justa, interface intuitiva
-            e suporte para <span class="text-[var(--alynx-cyan)] font-semibold">PC e Mobile</span>.
-          </p>
-
-          <!-- IP + botões -->
-          <div class="space-y-3">
-            <div class="text-xs uppercase tracking-[0.22em] text-slate-400">IP DO SERVIDOR</div>
-            <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
-              <div class="flex-1 flex items-center justify-between gap-3 rounded-2xl border border-slate-700/60 bg-slate-900/50 px-4 py-2.5 text-sm">
-                <div>
-                  <!-- ALTERAR AQUI O IP REAL -->
-                  <div id="ip-text" class="font-mono text-[var(--alynx-cyan)] text-sm">alyn.jogar.io</div>
-                  <div class="text-[11px] text-slate-400">
-                    Java: 1.20+ &nbsp;•&nbsp; Bedrock: Porta padrão 19132
-                  </div>
-                </div>
-                <button
-                  onclick="copyIP()"
-                  class="hidden sm:inline-flex text-[11px] px-3 py-1 rounded-full border border-[var(--alynx-purple)]/60 text-[var(--alynx-purple)] font-semibold uppercase tracking-[0.16em] transition-all hover:bg-[var(--alynx-purple)]/10">
-                  Copiar
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex flex-wrap gap-3">
-            <a href="#como-jogar" class="btn-main inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] transition-all">
-              Começar a Jogar
-            </a>
-            <a
-              href="#comunidade"
-              class="btn-outline inline-flex items-center gap-2 px-5 py-2.5 text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] text-slate-100 transition-all">
-              Entrar na Comunidade
-            </a>
-          </div>
-
-          <!-- Mini features -->
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2 text-xs text-slate-300">
-            <div class="card-neon rounded-xl p-[1px]">
-              <div class="card-neon-inner rounded-[0.7rem] px-3 py-2.5">
-                <div class="text-[var(--alynx-gold)] font-semibold text-[11px] uppercase tracking-[0.16em] mb-1">RPG</div>
-                <p>Classes, atributos, árvores de talentos e skills com efeitos visuais.</p>
-              </div>
-            </div>
-            <div class="card-neon rounded-xl p-[1px]">
-              <div class="card-neon-inner rounded-[0.7rem] px-3 py-2.5">
-                <div class="text-[var(--alynx-cyan)] font-semibold text-[11px] uppercase tracking-[0.16em] mb-1">Guerras</div>
-                <p>Crie reinos, proteja seu Nexus e dispute territórios com outros jogadores.</p>
-              </div>
-            </div>
-            <div class="card-neon rounded-xl p-[1px] sm:block hidden">
-              <div class="card-neon-inner rounded-[0.7rem] px-3 py-2.5">
-                <div class="text-[var(--alynx-purple)] font-semibold text-[11px] uppercase tracking-[0.16em] mb-1">Desafios</div>
-                <p>Mobs de elite com níveis, recompensas e progresso de poder.</p>
-              </div>
-            </div>
-          </div>
+  <main class="pt-32 md:pt-40 pb-20 px-4 relative z-10">
+    <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center text-center md:text-left">
+      
+      <div class="space-y-6">
+        <div class="inline-flex gap-2 justify-center md:justify-start flex-wrap">
+          <span class="badge-fun text-green-600">🟢 Servidor Online</span>
+          <span class="badge-fun text-blue-500">🎮 Java (1.20+) & Bedrock</span>
         </div>
 
-        <!-- Direita: logo / arte -->
-        <div class="relative flex justify-center md:justify-end">
-          <div class="logo-glow">
-            <div class="relative rounded-[2.2rem] border border-slate-600/40 bg-slate-950/60 shadow-[0_0_60px_rgba(181,124,255,0.65)] px-6 py-6 sm:px-8 sm:py-8 max-w-md">
-              <img
-                src="assets/alynx-logo.png"
-                alt="Alynx Minecraft"
-                class="w-full h-auto object-contain drop-shadow-[0_0_30px_rgba(255,184,77,0.8)]"
-              />
-              <div class="mt-4 text-center space-y-1">
-                <div class="font-display text-xl tracking-[0.2em] text-[var(--alynx-gold)]">ALYNX</div>
-                <div class="text-[11px] uppercase tracking-[0.2em] text-[var(--alynx-cyan)]">Minecraft Survival RPG</div>
-                <p class="text-xs text-slate-300 mt-2">
-                  Progrida do básico ao lendário, enfrente ameaças de elite e conquiste seu lugar entre os maiores nomes do Alynx.
-                </p>
-              </div>
-            </div>
+        <h1 class="font-cartoon text-5xl md:text-7xl text-white drop-shadow-[0_4px_0_rgba(0,0,0,0.2)]" style="-webkit-text-stroke: 2px #1f2937;">
+          Entre no mundo <br>
+          <span class="text-gold-coin">RPG do Alynx!</span>
+        </h1>
+
+        <p class="text-lg font-semibold text-gray-800 bg-white/50 p-4 rounded-2xl border-2 border-white backdrop-blur-sm shadow-sm">
+          Evolua classes, desbrave masmorras, crie nações e construa sua história em um servidor Survival RPG pensado para todas as idades. Do básico ao lendário, sua jornada começa aqui!
+        </p>
+
+        <div class="bg-white border-4 border-gray-800 rounded-2xl p-2 flex flex-col sm:flex-row items-center justify-between gap-4 max-w-md shadow-[6px_6px_0_rgba(31,41,55,0.15)] mx-auto md:mx-0">
+          <div class="text-center sm:text-left pl-3">
+            <div class="text-[11px] font-black text-gray-400 uppercase tracking-widest">IP DO SERVIDOR</div>
+            <div id="ip-text" class="font-cartoon text-xl md:text-2xl text-magic-purple">alynx.jogar.io</div>
+            <div class="text-[10px] font-bold text-gray-500 mt-1">Bedrock: Porta 19132</div>
           </div>
+          <button onclick="copyIP()" class="btn-3d btn-play px-6 py-3 text-lg w-full sm:w-auto">
+            JOGAR 🚀
+          </button>
         </div>
       </div>
-    </section>
 
-    <!-- SOBRE / FEATURES -->
-    <section id="sobre" class="relative py-14 md:py-20">
-      <div class="section-glow absolute inset-0 opacity-60"></div>
-      <div class="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 space-y-10">
-        <div class="text-center max-w-3xl mx-auto space-y-3">
-          <h2 class="font-display text-2xl sm:text-3xl">
-            O que torna o <span class="text-[var(--alynx-gold)]">Alynx</span> diferente?
-          </h2>
-          <p class="text-slate-300 text-sm sm:text-base">
-            Aqui não é só “mais um survival”. No Alynx você tem progressão de personagem, economia viva, reinos, guerras e um sistema de poder
-            que respeita seu tempo de jogo.
-          </p>
+      <div class="relative h-[350px] flex justify-center items-center">
+        <div class="w-56 h-56 bg-white border-8 border-gray-800 rounded-full flex justify-center items-center floating shadow-[0_20px_0_rgba(0,0,0,0.1)] relative z-10 overflow-hidden">
+          <img src="https://api.mineatar.io/body/full/Steve" alt="Minecraft Character" class="h-48 object-contain mt-4" onerror="this.src=''; this.alt='⚔️'; this.className='text-9xl';">
         </div>
-
-        <div class="grid md:grid-cols-3 gap-6">
-          <div class="card-neon">
-            <div class="card-neon-inner h-full p-5 flex flex-col gap-2.5">
-              <h3 class="font-semibold text-[var(--alynx-gold)] text-sm uppercase tracking-[0.18em]">Survival RPG</h3>
-              <p class="text-sm text-slate-200">
-                Mundo survival com proteção, missões, progressão de poder e um ecossistema pensado para longas jornadas.
-              </p>
-              <ul class="mt-1 text-xs text-slate-400 space-y-1 list-disc list-inside">
-                <li>Itens e equipamentos relevantes</li>
-                <li>Drops úteis em vários estágios do jogo</li>
-                <li>Ambiente amistoso para iniciantes</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="card-neon">
-            <div class="card-neon-inner h-full p-5 flex flex-col gap-2.5">
-              <h3 class="font-semibold text-[var(--alynx-cyan)] text-sm uppercase tracking-[0.18em]">Classes & Skills</h3>
-              <p class="text-sm text-slate-200">
-                Escolha sua classe, distribua atributos, desbloqueie habilidades e personalize seu estilo de combate.
-              </p>
-              <ul class="mt-1 text-xs text-slate-400 space-y-1 list-disc list-inside">
-                <li>Mago, Guerreiro, Paladino, Ladino e Arqueiro</li>
-                <li>Subclasses avançadas como Arcano</li>
-                <li>Sistema de árvores de talentos intuitivo</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="card-neon">
-            <div class="card-neon-inner h-full p-5 flex flex-col gap-2.5">
-              <h3 class="font-semibold text-[var(--alynx-purple)] text-sm uppercase tracking-[0.18em]">Reinos & Elites</h3>
-              <p class="text-sm text-slate-200">
-                Crie um reino com seus amigos, proteja seu Nexus, enfrente mobs de elite e prove a força do seu clã.
-              </p>
-              <ul class="mt-1 text-xs text-slate-400 space-y-1 list-disc list-inside">
-                <li>Nexus, claims e invasões controladas</li>
-                <li>Mobs de elite com níveis e recompensas</li>
-                <li>Poder do jogador medido e exibido in-game</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+        <div class="absolute top-5 right-5 w-20 h-20 bg-gold-coin border-4 border-gray-800 rounded-xl floating-delay flex justify-center items-center text-4xl transform rotate-12">💎</div>
+        <div class="absolute bottom-10 left-0 w-24 h-24 bg-blue-400 border-4 border-gray-800 rounded-full floating flex justify-center items-center text-4xl transform -rotate-12" style="animation-duration: 5s;">📜</div>
       </div>
-    </section>
 
-    <!-- COMO JOGAR -->
-    <section id="como-jogar" class="py-14 md:py-20 border-t border-slate-800/70 bg-[radial-gradient(circle_at_top,_#101630,_#050816_60%)]">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 space-y-10">
-        <div class="grid md:grid-cols-[1.1fr_1fr] gap-10 items-start">
-          <div class="space-y-5">
-            <h2 class="font-display text-2xl sm:text-3xl mb-1">Como jogar no Alynx</h2>
-            <p class="text-sm sm:text-base text-slate-300">
-              Siga o passo a passo abaixo para entrar no servidor em menos de 5 minutos, seja no PC ou no celular.
-            </p>
-
-            <ol class="space-y-3 text-sm text-slate-200">
-              <li>
-                <span class="font-semibold text-[var(--alynx-gold)]">1. Abra o Minecraft</span><br />
-                No PC (<span class="text-[var(--alynx-cyan)]">Java Edition</span>) ou no celular/console (<span class="text-[var(--alynx-cyan)]">Bedrock</span>).
-              </li>
-              <li>
-                <span class="font-semibold text-[var(--alynx-gold)]">2. Adicione o servidor Alynx</span><br />
-                Use o IP:
-                <span class="font-mono text-[var(--alynx-cyan)]" id="ip-text-secondary">alyn.jogar.io</span><br />
-                Bedrock: porta padrão <span class="font-mono text-[var(--alynx-cyan)]">19132</span>.
-              </li>
-              <li>
-                <span class="font-semibold text-[var(--alynx-gold)]">3. Entre e faça o tutorial</span><br />
-                Ao entrar no lobby, siga as placas e NPCs. Eles explicam:
-                classes, reinos, elites e comandos básicos.
-              </li>
-              <li>
-                <span class="font-semibold text-[var(--alynx-gold)]">4. Escolha sua classe</span><br />
-                Abra o menu de classes, veja a descrição de cada uma e selecione a que combina mais com seu estilo de jogo.
-              </li>
-              <li>
-                <span class="font-semibold text-[var(--alynx-gold)]">5. Comece sua jornada</span><br />
-                Junte recursos, enfrente mobs, faça missões, crie ou entre em um reino e evolua seu poder no Alynx.
-              </li>
-            </ol>
-
-            <div class="mt-4 flex flex-wrap gap-3 text-xs text-slate-300">
-              <div class="badge-pill px-3 py-1.5">
-                Versão recomendada Java: <span class="text-[var(--alynx-cyan)] font-semibold">1.20+</span>
-              </div>
-              <div class="badge-pill px-3 py-1.5">
-                Bedrock: <span class="text-[var(--alynx-cyan)] font-semibold">Mobile, Console & Windows</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Box rápido de info -->
-          <div class="card-neon">
-            <div class="card-neon-inner p-5 sm:p-6 space-y-4">
-              <h3 class="font-display text-lg">Resumo rápido</h3>
-              <div class="space-y-3 text-sm">
-                <div class="flex items-start gap-3">
-                  <span class="mt-0.5 text-[var(--alynx-gold)]">✔</span>
-                  <p><span class="font-semibold">Crossplay:</span> jogue no PC, celular ou console, todos juntos no mesmo mundo.</p>
-                </div>
-                <div class="flex items-start gap-3">
-                  <span class="mt-0.5 text-[var(--alynx-gold)]">✔</span>
-                  <p><span class="font-semibold">Progressão clara:</span> você ganha pontos de atributos, habilidades e árvore de talentos à medida que sobe de nível.</p>
-                </div>
-                <div class="flex items-start gap-3">
-                  <span class="mt-0.5 text-[var(--alynx-gold)]">✔</span>
-                  <p><span class="font-semibold">Interface amigável:</span> menus guiados, textos em português e explicações dentro do jogo.</p>
-                </div>
-              </div>
-
-              <button
-                onclick="copyIP()"
-                class="w-full btn-main rounded-2xl mt-2 py-2.5 text-xs sm:text-sm font-semibold uppercase tracking-[0.16em] flex items-center justify-center gap-2 transition-all">
-                Copiar IP e Entrar
-              </button>
-
-              <p class="text-[11px] text-slate-400 leading-relaxed">
-                Se você for iniciante, não se preocupe: o Alynx foi pensado para ser
-                <span class="text-slate-200 font-semibold">fácil de entender</span>, com explicações simples e
-                um ritmo de jogo que permite aprender aos poucos.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CLASSES -->
-    <section id="classes" class="py-14 md:py-20">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 space-y-10">
-        <div class="text-center max-w-3xl mx-auto space-y-3">
-          <h2 class="font-display text-2xl sm:text-3xl">Classes do Alynx</h2>
-          <p class="text-sm sm:text-base text-slate-300">
-            Cada classe tem seu estilo de combate, atributos e habilidades. Você pode evoluir, desbloquear
-            talentos e, mais pra frente, acessar subclasses avançadas.
-          </p>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-6">
-          <!-- Mago -->
-          <div class="card-neon">
-            <div class="card-neon-inner p-5 flex flex-col gap-2.5 h-full">
-              <div class="flex items-center justify-between">
-                <h3 class="font-display text-lg text-[var(--alynx-purple)]">Mago</h3>
-                <span class="text-[11px] px-2 py-1 rounded-full bg-[var(--alynx-purple)]/20 text-[var(--alynx-purple)] uppercase tracking-[0.14em]">Longa distância</span>
-              </div>
-              <p class="text-sm text-slate-200">
-                Controla magias, projéteis arcanos e habilidades de cura. Possui muita mana e poder, mas menos vida.
-              </p>
-              <ul class="text-xs text-slate-400 space-y-1 list-disc list-inside">
-                <li>Especialista em dano mágico</li>
-                <li>Habilidades em área e controle</li>
-                <li>Subclasse: Mago Arcano</li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Guerreiro -->
-          <div class="card-neon">
-            <div class="card-neon-inner p-5 flex flex-col gap-2.5 h-full">
-              <div class="flex items-center justify-between">
-                <h3 class="font-display text-lg text-[var(--alynx-gold)]">Guerreiro</h3>
-                <span class="text-[11px] px-2 py-1 rounded-full bg-[var(--alynx-gold)]/15 text-[var(--alynx-gold)] uppercase tracking-[0.14em]">Frontal</span>
-              </div>
-              <p class="text-sm text-slate-200">
-                Luta corpo a corpo, acumula Fúria ao atacar e se torna cada vez mais perigoso quanto mais tempo permanece em combate.
-              </p>
-              <ul class="text-xs text-slate-400 space-y-1 list-disc list-inside">
-                <li>Muita vida e resistência</li>
-                <li>Skills focadas em dano físico</li>
-                <li>Sinergia com reinos e guerras</li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Paladino -->
-          <div class="card-neon">
-            <div class="card-neon-inner p-5 flex flex-col gap-2.5 h-full">
-              <div class="flex items-center justify-between">
-                <h3 class="font-display text-lg text-[var(--alynx-cyan)]">Paladino</h3>
-                <span class="text-[11px] px-2 py-1 rounded-full bg-[var(--alynx-cyan)]/15 text-[var(--alynx-cyan)] uppercase tracking-[0.14em]">Suporte / Tank</span>
-              </div>
-              <p class="text-sm text-slate-200">
-                Guerreiro sagrado focado em proteção e cura de aliados. Ótimo para jogar em grupo e liderar batalhas.
-              </p>
-              <ul class="text-xs text-slate-400 space-y-1 list-disc list-inside">
-                <li>Alta resistência e sustain</li>
-                <li>Habilidades de escudo e cura</li>
-                <li>Muito desejado em reinos fortes</li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Ladino -->
-          <div class="card-neon">
-            <div class="card-neon-inner p-5 flex flex-col gap-2.5 h-full">
-              <div class="flex items-center justify-between">
-                <h3 class="font-display text-lg text-pink-400">Ladino</h3>
-                <span class="text-[11px] px-2 py-1 rounded-full bg-pink-500/15 text-pink-300 uppercase tracking-[0.14em]">Burst</span>
-              </div>
-              <p class="text-sm text-slate-200">
-                Especialista em ataques rápidos, furtividade e mobilidade. Causa muito dano em pouco tempo, mas precisa tomar cuidado com a vida.
-              </p>
-              <ul class="text-xs text-slate-400 space-y-1 list-disc list-inside">
-                <li>Alta velocidade de ataque</li>
-                <li>Habilidades furtivas e de evasão</li>
-                <li>Perfeito para emboscadas</li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Arqueiro -->
-          <div class="card-neon">
-            <div class="card-neon-inner p-5 flex flex-col gap-2.5 h-full">
-              <div class="flex items-center justify-between">
-                <h3 class="font-display text-lg text-lime-300">Arqueiro</h3>
-                <span class="text-[11px] px-2 py-1 rounded-full bg-lime-400/15 text-lime-200 uppercase tracking-[0.14em]">Longa distância</span>
-              </div>
-              <p class="text-sm text-slate-200">
-                Mestre do arco, acerta inimigos a distância com precisão, usando stamina e posicionamento para sobreviver.
-              </p>
-              <ul class="text-xs text-slate-400 space-y-1 list-disc list-inside">
-                <li>Foco em projéteis e mobilidade</li>
-                <li>Ótimo para ajudar o time à distância</li>
-                <li>Função chave em guerras de reino</li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Subclasses -->
-          <div class="card-neon">
-            <div class="card-neon-inner p-5 flex flex-col gap-2.5 h-full">
-              <h3 class="font-display text-lg text-[var(--alynx-purple-strong)]">Subclasses & Progressão</h3>
-              <p class="text-sm text-slate-200">
-                Ao subir de nível, você desbloqueia pontos de atributos, pontos de skill, pontos de árvore de talentos
-                e pode acessar subclasses como o <span class="text-[var(--alynx-purple)] font-semibold">Mago Arcano</span>.
-              </p>
-              <p class="text-xs text-slate-400">
-                Toda a progressão é mostrada de forma clara na interface do Alynx, para que jogadores novos entendam facilmente
-                como ficar mais fortes.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- REINOS & GUERRAS -->
-    <section id="reinos" class="py-14 md:py-20 bg-[radial-gradient(circle_at_top,_#15172e,_#050816_70%)] border-t border-slate-800/70">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 space-y-10">
-        <div class="grid md:grid-cols-[1.1fr_1fr] gap-10 items-start">
-          <div class="space-y-4">
-            <h2 class="font-display text-2xl sm:text-3xl mb-1">Reinos, Nexus e guerras</h2>
-            <p class="text-sm sm:text-base text-slate-300">
-              No Alynx você pode criar um reino, convidar amigos, proteger seu território e disputar espaço com outros jogadores.
-              O coração do seu reino é o <span class="text-[var(--alynx-gold)] font-semibold">Nexus</span>.
-            </p>
-
-            <ul class="space-y-2.5 text-sm text-slate-200">
-              <li><span class="text-[var(--alynx-gold)] font-semibold">• Nexus:</span> bloco principal do seu reino. Proteja-o para não perder recursos e espaço.</li>
-              <li><span class="text-[var(--alynx-gold)] font-semibold">• Claims:</span> áreas protegidas em volta do Nexus onde o reino constrói sua base.</li>
-              <li><span class="text-[var(--alynx-gold)] font-semibold">• Invasões:</span> em momentos específicos, outros reinos podem tentar avançar sobre seu território.</li>
-              <li><span class="text-[var(--alynx-gold)] font-semibold">• Poder:</span> o poder do seu reino une o progresso dos membros, elites derrotados e recursos investidos.</li>
-            </ul>
-          </div>
-
-          <div class="card-neon">
-            <div class="card-neon-inner p-5 sm:p-6 space-y-4">
-              <h3 class="font-display text-lg">Dica importante sobre o Nexus</h3>
-              <p class="text-sm text-slate-200">
-                O Nexus não some totalmente quando atacado. Ele é o centro do seu reino e precisa ser defendido
-                com estratégia, muros, traps e trabalho em equipe.
-              </p>
-              <p class="text-sm text-slate-200">
-                Você pode usar uma <span class="font-semibold text-[var(--alynx-gold)]">enxada de diamante</span> e
-                quebrar o bloco do Nexus do inimigo para
-                <span class="font-semibold text-[var(--alynx-cyan)]">roubar os pontos de recursos (RP)</span> deles.
-              </p>
-              <p class="text-xs text-slate-400">
-                Isso torna cada ataque mais tenso e estratégico: defender o Nexus é tão importante quanto atacar o dos outros.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- COMUNIDADE -->
-    <section id="comunidade" class="py-14 md:py-20">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 space-y-10">
-        <div class="grid md:grid-cols-[1.1fr_1fr] gap-10 items-start">
-          <div class="space-y-4">
-            <h2 class="font-display text-2xl sm:text-3xl">Comunidade Alynx</h2>
-            <p class="text-sm sm:text-base text-slate-300">
-              O Alynx foi pensado para ser amigável, organizado e divertido. Queremos um ambiente em que
-              adultos, jovens e crianças possam jogar com segurança.
-            </p>
-            <ul class="space-y-2.5 text-sm text-slate-200">
-              <li><span class="text-[var(--alynx-gold)] font-semibold">• Respeito em primeiro lugar:</span> nada de xingamentos, preconceito ou bullying.</li>
-              <li><span class="text-[var(--alynx-gold)] font-semibold">• Jogo limpo:</span> hacks, exploits e trapaças são proibidos.</li>
-              <li><span class="text-[var(--alynx-gold)] font-semibold">• Ajuda aos iniciantes:</span> se você já é experiente, ajude quem está começando.</li>
-            </ul>
-            <p class="text-xs text-slate-400">
-              As regras completas ficam disponíveis dentro do servidor e em nossos canais oficiais.
-            </p>
-          </div>
-
-          <div class="card-neon">
-            <div class="card-neon-inner p-5 sm:p-6 space-y-4">
-              <h3 class="font-display text-lg">Entre nos nossos canais</h3>
-              <p class="text-sm text-slate-200">
-                Use nossos canais oficiais para tirar dúvidas, reportar problemas, sugerir ideias e acompanhar novidades do Alynx.
-              </p>
-              <div class="space-y-2 text-sm text-slate-300">
-                <div class="flex items-center justify-between gap-3">
-                  <span>Canal de avisos e eventos</span>
-                  <span class="text-[11px] px-2 py-1 rounded-full bg-[var(--alynx-purple)]/20 text-[var(--alynx-purple)] uppercase tracking-[0.14em]">Recomendado</span>
-                </div>
-                <div>Suporte rápido com a equipe, tutoriais e guias da comunidade.</div>
-              </div>
-              <a
-                href="#"
-                class="btn-main inline-flex items-center justify-center w-full rounded-2xl mt-2 py-2.5 text-xs sm:text-sm font-semibold uppercase tracking-[0.16em] transition-all">
-                Entrar no Discord do Alynx
-              </a>
-              <p class="text-[11px] text-slate-400">
-                Link do Discord será exibido aqui. Você pode editar este botão no código caso o servidor use outro canal de comunicação.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    </div>
   </main>
 
-  <!-- FOOTER -->
-  <footer class="border-t border-slate-800/80 bg-[#040612]">
-    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-slate-400">
-      <div class="flex items-center gap-2">
-        <span class="font-display tracking-[0.24em] text-[var(--alynx-gold)] text-[11px] uppercase">ALYNX</span>
-        <span class="text-slate-600">•</span>
-        <span>Servidor Minecraft Survival RPG</span>
+  <div class="grass-divider"></div>
+
+  <section id="como-jogar" class="section-dirt py-20 px-4 relative z-0">
+    <div class="max-w-6xl mx-auto grid lg:grid-cols-[1fr_1.5fr] gap-12 items-center">
+      
+      <div class="card-cartoon p-6 bg-[#FFFBED] text-gray-800 transform -rotate-2">
+        <h3 class="font-cartoon text-3xl mb-4 text-orange-600">Por onde eu começo?</h3>
+        <ol class="space-y-4 font-bold text-gray-700">
+          <li class="flex gap-3"><span class="bg-orange-500 text-white w-6 h-6 rounded-full flex items-center justify-center shrink-0">1</span> Entre usando o IP (PC ou Celular).</li>
+          <li class="flex gap-3"><span class="bg-orange-500 text-white w-6 h-6 rounded-full flex items-center justify-center shrink-0">2</span> Siga o Tutorial interativo no Lobby.</li>
+          <li class="flex gap-3"><span class="bg-orange-500 text-white w-6 h-6 rounded-full flex items-center justify-center shrink-0">3</span> Escolha sua primeira Classe.</li>
+          <li class="flex gap-3"><span class="bg-orange-500 text-white w-6 h-6 rounded-full flex items-center justify-center shrink-0">4</span> Colete recursos, faça missões e evolua!</li>
+        </ol>
+        <p class="text-sm text-gray-500 mt-6 bg-white p-3 rounded-xl border-2 border-gray-300">
+          O Alynx é amigável para iniciantes! Tudo é explicado em português, com menus guiados e uma comunidade pronta para ajudar.
+        </p>
       </div>
-      <div class="flex flex-wrap gap-3 items-center">
-        <span>© <span id="year"></span> Alynx. Todos os direitos reservados.</span>
-        <span class="hidden sm:inline text-slate-600">•</span>
-        <span class="text-slate-500">Este site não é afiliado à Mojang ou Microsoft.</span>
+
+      <div class="space-y-6 text-white drop-shadow-md">
+        <h2 class="font-cartoon text-4xl md:text-5xl">Muito além do Survival</h2>
+        <p class="text-lg font-bold opacity-90 leading-relaxed">
+          Aqui não é só bater em zumbis. O Alynx integra um verdadeiro sistema de RPG dentro do seu mundo quadrado favorito.
+        </p>
+        
+        <div class="grid sm:grid-cols-2 gap-4 mt-8">
+          <div class="bg-black/30 p-4 rounded-2xl border-2 border-white/20 backdrop-blur-sm">
+            <h4 class="font-cartoon text-xl text-gold-coin mb-1">Crossplay Perfeito</h4>
+            <p class="text-sm font-semibold">Jogue no PC, Console ou Mobile. Todos juntos no mesmo universo, sem lag e sem desculpas.</p>
+          </div>
+          <div class="bg-black/30 p-4 rounded-2xl border-2 border-white/20 backdrop-blur-sm">
+            <h4 class="font-cartoon text-xl text-mc-grass mb-1">Itens Customizados</h4>
+            <p class="text-sm font-semibold">Armas épicas, armaduras raras e artefatos mágicos com status próprios e efeitos visuais.</p>
+          </div>
+        </div>
       </div>
+
+    </div>
+  </section>
+
+  <section id="classes" class="py-20 px-4 bg-[#F8FAFC] relative border-t-4 border-gray-800">
+    <div class="max-w-6xl mx-auto space-y-12">
+      
+      <div class="text-center space-y-4">
+        <h2 class="font-cartoon text-4xl md:text-5xl text-magic-purple">Classes & Progressão</h2>
+        <p class="font-bold text-lg text-gray-600 max-w-3xl mx-auto">
+          No Alynx, você tem liberdade total. Suba de nível para ganhar <span class="text-blue-500">Pontos de Atributo (Força, Destreza, Inteligência, Vitalidade)</span>, desbloquear habilidades ativas na <span class="text-orange-500">Árvore de Talentos</span> e evoluir para subclasses poderosas!
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div class="card-cartoon p-4 border-blue-500 flex flex-col items-center text-center bg-white group">
+          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-3xl mb-3 group-hover:scale-110 transition-transform">🧙‍♂️</div>
+          <h3 class="font-cartoon text-xl text-blue-600">Mago</h3>
+          <span class="text-[10px] bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-bold uppercase mb-2">Longa Distância</span>
+          <p class="text-xs font-bold text-gray-600">Controla magias e projéteis arcanos. Foco total em Inteligência.</p>
+          <div class="mt-auto pt-3 text-[10px] text-gray-400 font-bold">Subclasse: Mago Arcano</div>
+        </div>
+
+        <div class="card-cartoon p-4 border-red-500 flex flex-col items-center text-center bg-white group">
+          <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-3xl mb-3 group-hover:scale-110 transition-transform">⚔️</div>
+          <h3 class="font-cartoon text-xl text-red-600">Guerreiro</h3>
+          <span class="text-[10px] bg-red-100 text-red-800 px-2 py-1 rounded-full font-bold uppercase mb-2">Frontal / Fúria</span>
+          <p class="text-xs font-bold text-gray-600">Luta corpo a corpo. Acumula fúria para golpes destrutivos. Foco em Força.</p>
+          <div class="mt-auto pt-3 text-[10px] text-gray-400 font-bold">Sinergia em Guerras</div>
+        </div>
+
+        <div class="card-cartoon p-4 border-teal-500 flex flex-col items-center text-center bg-white group">
+          <div class="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center text-3xl mb-3 group-hover:scale-110 transition-transform">🛡️</div>
+          <h3 class="font-cartoon text-xl text-teal-600">Paladino</h3>
+          <span class="text-[10px] bg-teal-100 text-teal-800 px-2 py-1 rounded-full font-bold uppercase mb-2">Suporte / Tank</span>
+          <p class="text-xs font-bold text-gray-600">Guerreiro sagrado. Foca em Vitalidade para proteger aliados e curar.</p>
+          <div class="mt-auto pt-3 text-[10px] text-gray-400 font-bold">Essencial em Raids</div>
+        </div>
+
+        <div class="card-cartoon p-4 border-pink-500 flex flex-col items-center text-center bg-white group">
+          <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center text-3xl mb-3 group-hover:scale-110 transition-transform">🥷</div>
+          <h3 class="font-cartoon text-xl text-pink-500">Ladino</h3>
+          <span class="text-[10px] bg-pink-100 text-pink-800 px-2 py-1 rounded-full font-bold uppercase mb-2">Burst / Stealth</span>
+          <p class="text-xs font-bold text-gray-600">Ataques rápidos e furtivos. Foco em Destreza para críticos mortais.</p>
+          <div class="mt-auto pt-3 text-[10px] text-gray-400 font-bold">Mestre das Emboscadas</div>
+        </div>
+
+        <div class="card-cartoon p-4 border-green-500 flex flex-col items-center text-center bg-white group">
+          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-3xl mb-3 group-hover:scale-110 transition-transform">🏹</div>
+          <h3 class="font-cartoon text-xl text-green-600">Arqueiro</h3>
+          <span class="text-[10px] bg-green-100 text-green-800 px-2 py-1 rounded-full font-bold uppercase mb-2">Ranged / Agilidade</span>
+          <p class="text-xs font-bold text-gray-600">Acerta inimigos a distância usando stamina. Precisa de bom posicionamento.</p>
+          <div class="mt-auto pt-3 text-[10px] text-gray-400 font-bold">Controle de Área</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="missoes" class="py-20 px-4 bg-[#FFF8DC] border-t-4 border-gray-800">
+    <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+      
+      <div class="space-y-6">
+        <h2 class="font-cartoon text-4xl text-orange-600">Aventura & Economia Viva</h2>
+        
+        <div class="bg-white p-5 rounded-2xl border-4 border-gray-800 shadow-[6px_6px_0_rgba(31,41,55,0.15)]">
+          <h3 class="font-cartoon text-2xl text-gray-800 mb-2 flex items-center gap-2">📜 Linha de Missões</h3>
+          <p class="text-sm font-bold text-gray-600">
+            Conheça NPCs únicos nas cidades! Siga a <strong>Main Quest</strong> (História Principal) para entender os mistérios do Alynx e liberar novas áreas. Faça <strong>Side Quests</strong> e Diárias para ganhar ouro, EXP e reputação.
+          </p>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border-4 border-gray-800 shadow-[6px_6px_0_rgba(31,41,55,0.15)]">
+          <h3 class="font-cartoon text-2xl text-gray-800 mb-2 flex items-center gap-2">⚒️ Profissões & Mercado</h3>
+          <p class="text-sm font-bold text-gray-600">
+            Torne-se um Ferreiro lendário, um Alquimista mestre ou um Minerador rico. A economia é movida pelos jogadores! Venda seus recursos em lojas virtuais (Feira Livre) ou participe de leilões de itens épicos.
+          </p>
+        </div>
+      </div>
+
+      <div class="relative h-full min-h-[300px] flex items-center justify-center">
+        <div class="w-full max-w-sm bg-[#8B5A2B] border-8 border-gray-800 rounded-t-full pt-12 pb-6 px-6 relative shadow-lg">
+          <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-red-500 border-4 border-gray-800 text-white font-cartoon px-6 py-2 rounded-xl text-xl shadow-md rotate-3">
+            LOJA DO ALYNX
+          </div>
+          <div class="grid grid-cols-2 gap-4 mt-4">
+            <div class="bg-black/20 h-20 rounded-lg flex items-center justify-center text-3xl border-2 border-[#6B421A]">🍎</div>
+            <div class="bg-black/20 h-20 rounded-lg flex items-center justify-center text-3xl border-2 border-[#6B421A]">🗡️</div>
+            <div class="bg-black/20 h-20 rounded-lg flex items-center justify-center text-3xl border-2 border-[#6B421A]">🧪</div>
+            <div class="bg-black/20 h-20 rounded-lg flex items-center justify-center text-3xl border-2 border-[#6B421A]">💎</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="cave-divider"></div>
+
+  <section id="dungeons" class="py-20 px-4 bg-dungeon-stone text-gray-200 border-b-4 border-gray-800">
+    <div class="max-w-6xl mx-auto text-center space-y-12">
+      
+      <div class="space-y-4">
+        <h2 class="font-cartoon text-4xl md:text-5xl text-purple-400 drop-shadow-[0_2px_0_rgba(0,0,0,1)]">Dungeons & Elites</h2>
+        <p class="font-bold text-lg max-w-2xl mx-auto opacity-90">
+          Prepare sua equipe. Adentre masmorras instanciadas, desvie de armadilhas e enfrente os Mobs de Elite — criaturas com inteligência artificial aprimorada, habilidades em área e drops que valem ouro.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="bg-gray-800 border-4 border-gray-900 rounded-2xl p-6 transform hover:scale-105 transition-transform shadow-[8px_8px_0_rgba(0,0,0,0.5)]">
+          <div class="text-5xl mb-4">💀</div>
+          <h3 class="font-cartoon text-2xl text-red-400 mb-2">Bosses Personalizados</h3>
+          <p class="text-sm font-bold text-gray-400">Esqueça o Wither comum. Nossos chefões têm fases de ataque, invocam lacaios e exigem estratégia real (Tank, Healer, DPS).</p>
+        </div>
+        
+        <div class="bg-gray-800 border-4 border-gray-900 rounded-2xl p-6 transform hover:scale-105 transition-transform shadow-[8px_8px_0_rgba(0,0,0,0.5)] mt-4 md:mt-0">
+          <div class="text-5xl mb-4">🗝️</div>
+          <h3 class="font-cartoon text-2xl text-yellow-400 mb-2">Dungeons Dinâmicas</h3>
+          <p class="text-sm font-bold text-gray-400">Encontre chaves secretas pelo mundo para abrir portões de masmorras. Cada run oferece baús com equipamentos de diferentes raridades (Comum a Lendário).</p>
+        </div>
+
+        <div class="bg-gray-800 border-4 border-gray-900 rounded-2xl p-6 transform hover:scale-105 transition-transform shadow-[8px_8px_0_rgba(0,0,0,0.5)] mt-4 md:mt-0">
+          <div class="text-5xl mb-4">✨</div>
+          <h3 class="font-cartoon text-2xl text-blue-400 mb-2">Loot e Upgrades</h3>
+          <p class="text-sm font-bold text-gray-400">Use os materiais dropados para forjar e dar Upgrade nos seus itens, adicionando pedras mágicas e status extras à sua Build.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="reinos" class="py-20 px-4 bg-royal-blue relative text-white border-b-4 border-gray-800 overflow-hidden">
+    <div class="absolute inset-0 opacity-10" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 20px, #ffffff 20px, #ffffff 40px);"></div>
+
+    <div class="max-w-6xl mx-auto relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+      
+      <div class="space-y-6">
+        <h2 class="font-cartoon text-4xl md:text-5xl text-gold-coin drop-shadow-[0_2px_0_rgba(0,0,0,1)]">Impérios em Guerra</h2>
+        <p class="text-lg font-bold opacity-90">
+          Não jogue sozinho. Forme um Reino com seus amigos, reivindique terras (Claims) e evolua de um pequeno acampamento para uma Nação imponente.
+        </p>
+
+        <ul class="space-y-4 font-bold bg-black/30 p-6 rounded-2xl border-2 border-white/20 backdrop-blur-sm">
+          <li class="flex items-start gap-3">
+            <span class="text-gold-coin text-xl">👑</span>
+            <div>
+              <span class="text-gold-coin">O Coração: O Nexus</span><br>
+              <span class="text-sm text-gray-300 font-normal">O bloco principal do seu reino. Construa muros e armadilhas ao redor dele. Ele é a sua vida!</span>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-blue-400 text-xl">⚔️</span>
+            <div>
+              <span class="text-blue-400">Invasões e Roubo de RP</span><br>
+              <span class="text-sm text-gray-300 font-normal">Durante as guerras, inimigos podem usar uma <strong>Enxada de Diamante</strong> para quebrar o bloco do seu Nexus e roubar os seus Pontos de Recursos (RP). Defenda-o a todo custo!</span>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-mc-grass text-xl">📈</span>
+            <div>
+              <span class="text-mc-grass">Poder Visível</span><br>
+              <span class="text-sm text-gray-300 font-normal">O poder do seu reino é calculado pela soma dos membros, bases e riquezas, exibido em um ranking oficial do servidor.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="flex justify-center">
+        <div class="relative w-64 h-64 bg-gray-800 border-8 border-gray-900 rounded-3xl shadow-[0_20px_0_rgba(0,0,0,0.4)] flex items-center justify-center transform rotate-3 hover:rotate-0 transition-transform">
+          <div class="absolute -top-10 text-6xl floating">🚩</div>
+          <div class="w-20 h-20 bg-cyan-400 rounded-xl animate-pulse shadow-[0_0_30px_rgba(34,211,238,0.6)] flex items-center justify-center text-white font-bold border-4 border-cyan-200">
+            NEXUS
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="py-20 px-4 bg-magic-purple relative border-t-8 border-gray-800 overflow-hidden">
+    <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle, #fff 20%, transparent 20%); background-size: 40px 40px;"></div>
+    
+    <div class="max-w-4xl mx-auto relative z-10 bg-white border-8 border-gray-800 rounded-3xl p-8 md:p-12 text-center shadow-[12px_12px_0_rgba(0,0,0,0.3)] transform -rotate-1 hover:rotate-0 transition-transform">
+      <span class="text-5xl block mb-4">💬</span>
+      <h2 class="font-cartoon text-4xl text-gray-800 mb-2">Comunidade Alynx</h2>
+      <p class="font-bold text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
+        Nosso ambiente é seguro para todas as idades. Sem hacks, sem toxicidade. Venha para o Discord conhecer a galera, ler os guias das classes e participar dos eventos valendo prêmios!
+      </p>
+      
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#" class="btn-3d btn-discord px-8 py-4 text-xl w-full sm:w-auto">
+          ENTRAR NO DISCORD 👾
+        </a>
+        <a href="#como-jogar" class="btn-3d bg-gray-200 text-gray-700 hover:bg-gray-300 px-8 py-4 text-xl w-full sm:w-auto border-gray-800">
+          VOLTAR AO TOPO ⬆️
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-gray-900 border-t-8 border-gray-800 py-10 text-center text-white px-4">
+    <div class="font-cartoon text-3xl mb-2 text-gold-coin tracking-widest">ALYNX</div>
+    <p class="font-bold text-gray-400 text-sm mb-6">Sua saga, suas regras. O maior Survival RPG crossplay.</p>
+    
+    <div class="flex flex-wrap items-center justify-center gap-4 text-xs font-bold text-gray-500 mb-4">
+      <a href="#" class="hover:text-white transition-colors">Regras do Servidor</a>
+      <span>•</span>
+      <a href="#" class="hover:text-white transition-colors">Loja VIP</a>
+      <span>•</span>
+      <a href="#" class="hover:text-white transition-colors">Suporte</a>
+    </div>
+
+    <div class="flex items-center justify-center gap-4 text-[10px] font-bold text-gray-600">
+      <span>© <span id="year"></span> Alynx. Todos os direitos reservados.</span>
+      <span class="hidden sm:inline">•</span>
+      <span class="block sm:inline">Não somos afiliados à Mojang AB.</span>
     </div>
   </footer>
 
-  <!-- JS -->
   <script>
-    const SERVER_IP = 'alyn.jogar.io'; // 🔁 Troque aqui se o IP for outro
+    // IP Oficial do Servidor
+    const SERVER_IP = 'alynx.jogar.io'; 
 
     function copyIP() {
       navigator.clipboard.writeText(SERVER_IP).then(function () {
-        alert('IP copiado: ' + SERVER_IP);
+        alert('🎉 IP COPIADO! Cole no seu Minecraft (Java ou Bedrock) e boa aventura!');
       }).catch(function () {
-        alert('Não foi possível copiar o IP. Copie manualmente: ' + SERVER_IP);
+        alert('Eita! Tivemos um problema mágico. Copie manualmente: ' + SERVER_IP);
       });
     }
 
-    // Atualiza IP em todos os lugares onde aparece como texto
+    // Atualiza o ano no rodapé automaticamente
     document.addEventListener('DOMContentLoaded', function () {
-      const elements = document.querySelectorAll('#ip-text, #ip-text-secondary');
-      elements.forEach(el => el.textContent = SERVER_IP);
       document.getElementById('year').textContent = new Date().getFullYear();
     });
   </script>
